@@ -113,6 +113,10 @@ func keepAlive(c *websocket.Conn, timeout time.Duration) {
 		return nil
 	})
 
+	c.SetPingHandler(func(appData string) error {
+		return c.WriteControl(websocket.PongMessage, nil, time.Now().Add(WebsocketTimeout))
+	})
+
 	go func() {
 		defer ticker.Stop()
 		for {
